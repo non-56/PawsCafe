@@ -21,6 +21,17 @@ struct RecommendCafe: Identifiable {
     let url: URL
 }
 
+struct Cafe: Identifiable, Equatable {
+    let id = UUID()
+    let name: String
+    let animal: String
+    let adress: String
+    let call: String
+    let price: String
+    let url: URL
+    let imageName: String
+}
+
 // MARK: - メインタブビュー
 
 struct MainTabView: View {
@@ -66,11 +77,18 @@ struct HomeView: View {
         RecommendCafe(name: "インコ", url: URL(string: "https://www.google.com")!)
     ]
     
+    let allCafes: [Cafe] = [
+        Cafe(name: "梅田カフェ", url: URL(string: "https://umeda.example.com")!, imageName: "cafe1"),
+        Cafe(name: "心斎橋ロースター", url: URL(string: "https://shinsaibashi.example.com")!, imageName: "cafe2"),
+        Cafe(name: "天王寺ブリュワリー", url: URL(string: "https://tennoji.example.com")!, imageName: "cafe3"),
+        Cafe(name: "堀江ラテ", url: URL(string: "https://horie.example.com")!, imageName: "cafe4")
+    ]
+    
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 34.7055, longitude: 135.4983),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
-
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -97,7 +115,7 @@ struct HomeView: View {
                             .padding(.vertical, 4)
                         }
                     }
-
+                    
                     // お気に入り
                     VStack(alignment: .leading) {
                         Text("お気に入り")
@@ -148,7 +166,7 @@ struct HomeView: View {
                             }
                         }
                     }
-
+                    
                     // 地図
                     VStack(alignment: .leading) {
                         Text("近辺のカフェマップ")
@@ -164,7 +182,6 @@ struct HomeView: View {
                                 )
                         }
                     }
-
                 }
                 .padding()
             }
@@ -173,6 +190,67 @@ struct HomeView: View {
         }
     }
 }
+// MARK: - カフェ一覧画面
+
+struct CafeListView: View {
+    let cafes: [Cafe]
+    
+    var body: some View {
+        List(cafes) { cafe in
+            VStack(alignment: .leading) {
+                Text(cafe.name)
+                    .font(.headline)
+                Link(cafe.url.absoluteString, destination: cafe.url)
+                    .font(.caption)
+                    .foregroundColor(.blue)
+            }
+            .padding(.vertical, 4)
+        }
+        .navigationTitle("カフェ一覧")
+    }
+}
+
+
+//MARK: - 一覧
+struct SelectFavoriteView: View {
+    var allCafes: [Cafe] = [Cafe(name: "サンプル", url: URL(string: "https://google.com")!, imageName: "sample")]
+    @Binding var favoriteCafes: [Cafe]
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        List {
+            ForEach(allCafes){ cafe in
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(cafe.name)
+                        Text(cafe.url.absoluteString)
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                    }
+                    Spacer()
+                    Button(action: {
+                        if !favoriteCafes.contains(cafe) {
+                            favoriteCafes.append(cafe)
+                        }
+                    }) {
+                        Image(systemName: favoriteCafes.contains(cafe) ? "heart.fill" : "heart")
+                            .foregroundColor(.red)
+                    }
+                }
+                .padding(.vertical, 6)
+            }
+        }
+        .navigationTitle("カフェを追加")
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("閉じる") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
+    }
+}
+
 
 // MARK: - 全予定表示画面
 
@@ -228,7 +306,7 @@ struct SearchView: View {
     // 動物選択用セット
     @State private var selectedAnimals: Set<String> = []
     let animalOptions = ["イヌ", "ネコ", "ウサギ", "ブタ", "爬虫類", "魚類", "昆虫", "その他"]
-
+    
     // 都道府県と現在地利用
     @State private var selectedPrefecture = ""
     @State private var useCurrentLocation = false
@@ -242,7 +320,7 @@ struct SearchView: View {
         "徳島県", "香川県", "愛媛県", "高知県",
         "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
     ]
-
+    
     // 価格帯選択
     @State private var selectedPrice = ""
     let priceOptions = [
@@ -250,14 +328,14 @@ struct SearchView: View {
         "3001円〜4000円", "4001円〜6000円", "6001円〜8000円",
         "8001円〜10000円", "10001円〜"
     ]
-
+    
     // 細かい条件選択用辞書
     @State private var fineConditions: [String: Bool] = [
         "未就学児OK": false, "12歳以下OK": false, "女性のみ": false,
         "抱っこOK": false, "おやつあり": false, "予約不要": false,
-        "フリータイム": false, "フード持ち込みOK": false, "22時以降営業": false, "譲渡": false
+        "フリータイム": false, "フード持ち込みOK": false, "22時以降営業": false, "譲渡": false, "撮影": false
     ]
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -285,8 +363,8 @@ struct SearchView: View {
                     }
                     .padding(.vertical, 4)
                 }
-
-
+                
+                
                 // 場所
                 Section(header: Text("場所")) {
                     Picker("都道府県を選択", selection: $selectedPrefecture) {
@@ -295,10 +373,10 @@ struct SearchView: View {
                             Text(prefecture).tag(prefecture)
                         }
                     }
-
+                    
                     Toggle("近くから探す", isOn: $useCurrentLocation)
                 }
-
+                
                 // 価格
                 Section(header: Text("価格")) {
                     Picker("価格帯を選択", selection: $selectedPrice) {
@@ -308,7 +386,7 @@ struct SearchView: View {
                         }
                     }
                 }
-
+                
                 // 細かい条件
                 Section(header: Text("細かい条件")) {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 12) {
@@ -329,8 +407,8 @@ struct SearchView: View {
                     }
                     .padding(.vertical, 4)
                 }
-
-
+                
+                
                 // 検索ボタン
                 Section {
                     Button("検索する") {
@@ -360,7 +438,7 @@ struct ProfileView: View {
     @State private var age: Int = 20
     @State private var gender: String = ""
     @State private var region: String = ""
-
+    
     let genders = ["", "男性", "女性", "その他"]
     let prefectures = [
         "", "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
@@ -372,7 +450,7 @@ struct ProfileView: View {
         "徳島県", "香川県", "愛媛県", "高知県",
         "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
     ]
-
+    
     var body: some View {
         NavigationView {
             Form {
@@ -381,20 +459,20 @@ struct ProfileView: View {
                     TextField("ニックネーム", text: $nickname)
                     TextField("メールアドレス", text: $email)
                         .keyboardType(.emailAddress)
-
+                    
                     Stepper(value: $age, in: 0...120) {
                         Text("年齢: \(age)歳")
                     }
-
+                    
                     Picker("性別", selection: $gender) {
                         ForEach(genders, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
                     }
-
+                    
                     Picker("地域（都道府県）", selection: $region) {
                         ForEach(prefectures, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
                     }
                 }
-
+                
                 Section {
                     Button("保存") {
                         // 保存処理（デバッグ表示）
@@ -419,4 +497,3 @@ struct ProfileView: View {
 #Preview {
     MainTabView()
 }
-
