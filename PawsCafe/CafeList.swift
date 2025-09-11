@@ -10,17 +10,17 @@ struct CafePlan: Identifiable, Codable {
     let name: String
 }
 
-struct FavoriteCafe: Identifiable, Codable {
-    let id: UUID
-    let name: String
-    let url: URL
-}
-
-struct RecommendCafe: Identifiable, Codable {
-    let id: UUID
-    let name: String
-    let url: URL
-}
+//struct FavoriteCafe: Identifiable, Codable {
+//    let id: UUID
+//    let name: String
+//    let url: URL
+//}
+//
+//struct RecommendCafe: Identifiable, Codable {
+//    let id: UUID
+//    let name: String
+//    let url: URL
+//}
 
 struct Cafe: Identifiable, Equatable, Codable {
     let id: UUID
@@ -83,8 +83,8 @@ class CafeViewModel: ObservableObject {
     @Published var allCafes: [Cafe] = []
     // ↓ すべてのデータをViewModelで管理するように追加
     @Published var cafePlans: [CafePlan] = []
-    @Published var favoriteCafes: [FavoriteCafe] = []
-    @Published var recommendCafes: [RecommendCafe] = []
+    @Published var favoriteCafes: [Cafe] = []
+    @Published var recommendCafes: [Cafe] = []
 
     // 初期化時にサンプルデータを読み込む
     init() {
@@ -94,32 +94,30 @@ class CafeViewModel: ObservableObject {
     func loadSampleData() {
         // allCafesのデータ (これは修正済み)
         self.allCafes = [
-             Cafe(id: UUID(), name: "梅田カフェ", animal:"dog", address:"大阪府", call:"080-XXXX-XXXX", price:"1000-2000円", url: URL(string: "https://umeda.example.com")!, imageName: "cafe1", latitude: 34.7025, longitude: 135.4959),
-             Cafe(id: UUID(), name: "心斎橋ロースター", animal:"cat", address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://shinsaibashi.example.com")!, imageName: "cafe2", latitude: 34.6723, longitude: 135.5033),
-             Cafe(id: UUID(), name: "天王寺ブリュワリー", animal:"cat", address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://tennoji.example.com")!, imageName: "cafe3", latitude: 34.6469, longitude: 135.5132),
-             Cafe(id: UUID(), name: "堀江ラテ", animal:"cat", address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://horie.example.com")!, imageName: "cafe4", latitude: 34.6749, longitude: 135.4949)
+             Cafe(id: UUID(), name: "にゃんにゃんカフェ", animal:"ネコ", address:"大阪府", call:"080-XXXX-XXXX", price:"1000-2000円", url: URL(string: "https://umeda.example.com")!, imageName: "cafe1", latitude: 34.7025, longitude: 135.4959),
+             Cafe(id: UUID(), name: "わんわんカフェ", animal:"イヌ", address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://shinsaibashi.example.com")!, imageName: "cafe2", latitude: 34.6723, longitude: 135.5033),
+             Cafe(id: UUID(), name: "ぴよぴよカフェ", animal:"鳥類", address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://tennoji.example.com")!, imageName: "cafe3", latitude: 34.6469, longitude: 135.5132),
+             Cafe(id: UUID(), name: "ぶーぶーカフェ", animal:"ブタ", address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://horie.example.com")!, imageName: "cafe4", latitude: 34.6749, longitude: 135.4949)
         ]
         
         // ↓ HomeViewから他のサンプルデータもここに移動する
         self.cafePlans = [
-            CafePlan(id: UUID(), date: "2025年6月13日", name: "梅田カフェ"),
-            CafePlan(id: UUID(), date: "2025年6月15日", name: "心斎橋ロースター"),
-            CafePlan(id: UUID(), date: "2025年6月20日", name: "天王寺ブリュワリー"),
-            CafePlan(id: UUID(), date: "2025年6月25日", name: "難波カフェ")
+            CafePlan(id: UUID(), date: "2025年9月13日", name: "にゃんにゃんカフェ"),
+            CafePlan(id: UUID(), date: "2025年9月15日", name: "わんわんカフェ"),
+            CafePlan(id: UUID(), date: "2025年9月20日", name: "ぴよぴよカフェ"),
+            CafePlan(id: UUID(), date: "2025年9月25日", name: "ぶーぶーカフェ")
         ]
         
         self.favoriteCafes = [
-            FavoriteCafe(id: UUID(), name: "中之島カフェ", url: URL(string: "https://www.google.com")!),
-            FavoriteCafe(id: UUID(), name: "堀江カフェ", url: URL(string: "https://www.google.com")!),
-            FavoriteCafe(id: UUID(), name: "天満カフェ", url: URL(string: "https://www.google.com")!),
-            FavoriteCafe(id: UUID(), name: "阿倍野カフェ", url: URL(string: "https://www.google.com")!)
-        ]
-        
-        self.recommendCafes = [
-            RecommendCafe(id: UUID(), name: "猫", url: URL(string: "https://www.google.com")!),
-            RecommendCafe(id: UUID(), name: "犬", url: URL(string: "https://www.google.com")!),
-            RecommendCafe(id: UUID(), name: "うさぎ", url: URL(string: "https://www.google.com")!),
-            RecommendCafe(id: UUID(), name: "インコ", url: URL(string: "https://www.google.com")!)
-        ]
+                    self.allCafes[0],
+                    self.allCafes[1]
+                ]
+
+                // ▼▼▼ おすすめのサンプルデータを「allCafes」から選ぶ形に変更 ▼▼▼
+                // 例えば、3番目と4番目をおすすめとします。
+                self.recommendCafes = [
+                    self.allCafes[2],
+                    self.allCafes[3]
+                ]
     }
 }

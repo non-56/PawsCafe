@@ -1,18 +1,27 @@
-//
-//  MainTabView.swift
-//  PawsCafe
-//
-//  Created by Kanno Taichi on 2025/09/03.
-//
 
 import SwiftUI
 
+// MARK: - メインタブビュー
+
 struct MainTabView: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView {
+            HomeView()
+                .tabItem {
+                    Label("ホーム", systemImage: "house.fill")
+                }
+            SearchView()
+                .tabItem {
+                    Label("検索", systemImage: "magnifyingglass")
+                }
+            ProfileView()
+                .tabItem {
+                    Label("プロフィール", systemImage: "person.crop.circle")
+                }
+        }
     }
 }
-
 #Preview {
     MainTabView()
+        .environmentObject(CafeViewModel()) // ← この一行を追加
 }
