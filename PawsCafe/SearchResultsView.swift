@@ -12,10 +12,6 @@ struct SearchResultsView: View {
     
     var body: some View {
         VStack {
-            Text("検索結果")
-                .font(.title)
-                .padding(.bottom, 10)
-            
             List(cafeViewModel.allCafes) { cafe in
                 VStack(alignment: .leading, spacing: 4) {
                     Text(cafe.name)

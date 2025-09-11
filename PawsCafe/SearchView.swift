@@ -91,7 +91,7 @@ struct SearchView: View {
                                     .font(.footnote)
                                     .frame(maxWidth: .infinity, minHeight: 36)
                                     .padding(.vertical, 8)
-                                    .background((fineConditions[key] ?? false) ? Color.blue : Color.gray.opacity(0.3))
+                                    .background((fineConditions[key] ?? false) ? Color.purple: Color.gray.opacity(0.3))
                                     .foregroundColor(.white)
                                     .cornerRadius(8)
                             }
@@ -109,8 +109,8 @@ struct SearchView: View {
                     }
                 }
             }
-            .background(Color(red: 0.9, green: 0.88, blue: 0.98))
             .navigationTitle("検索")
+            .background(Color(red: 0.9, green: 0.88, blue: 0.98))
         }
     }
 }

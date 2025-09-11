@@ -21,17 +21,18 @@ struct CafeDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                // 1. カフェのメイン画像
+                
+                // 1. カフェの名前
+                Text(cafe.name)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                
+                // 2. カフェのメイン画像
                 Image(cafe.imageName)
                     .resizable()
                     .scaledToFit()
                     .cornerRadius(12)
                     .shadow(radius: 5)
-                
-                // 2. カフェの名前
-                Text(cafe.name)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
                 
                 // 3. 詳細情報セクション
                 VStack(alignment: .leading, spacing: 12) {
