@@ -6,14 +6,15 @@ struct SelectFavoriteView: View {
     var allCafes: [Cafe] = [
           Cafe(id: UUID(), // id を追加
                name: "サンプル",
-               animal:"cat",
+               animals:["cat"],
                address:"大阪府", // address に修正
                call:"080-XXXX-XXXX",
                price:"2000-3000円",
                url: URL(string: "https://shinsaibashi.example.com")!,
                imageName: "sample",
                latitude: 34.6723, // latitude を追加
-               longitude: 135.5033) // longitude を追加
+               longitude: 135.5033, // longitude を追加
+               tags: []) // longitude を追加
       ]
     @Binding var favoriteCafes: [Cafe]
     @Environment(\.presentationMode) var presentationMode

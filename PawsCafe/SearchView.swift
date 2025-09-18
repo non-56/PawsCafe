@@ -19,15 +19,11 @@ struct SearchView: View {
     
     @State private var selectedPrice = ""
     let priceOptions = [
-        "〜1000円", "1001円〜2000円", "2001円〜3000円",
-        "3001円〜4000円", "4001円〜6000円", "6001円〜8000円",
-        "8001円〜10000円", "10001円〜"
+        "〜1000円", "1001円〜2000円", "2001円〜3000円", "3001円〜4000円", "4001円〜6000円", "6001円〜8000円", "8001円〜10000円", "10001円〜"
     ]
     
     @State private var fineConditions: [String: Bool] = [
-        "未就学児OK": false, "12歳以下OK": false, "女性のみ": false,
-        "抱っこOK": false, "おやつあり": false, "予約不要": false,
-        "フリータイム": false, "フード持ち込みOK": false, "22時以降営業": false, "譲渡": false, "撮影": false
+        "未就学児OK": false, "12歳以下OK": false, "女性のみ": false,"抱っこOK": false, "おやつあり": false, "予約不要": false,"フリータイム": false, "フード持ち込みOK": false, "22時以降営業": false, "譲渡": false, "撮影": false
     ]
     
     var body: some View {
@@ -103,19 +99,31 @@ struct SearchView: View {
                 
                 // 検索ボタン
                 Section {
-                    NavigationLink(destination: SearchResultsView()) {
+                    NavigationLink(
+                        destination: SearchResultsView(
+                            selectedAnimals: selectedAnimals,
+                            selectedPrefecture: selectedPrefecture,
+                            selectedPrice: selectedPrice,
+                            selectedTags: fineConditions.filter { $0.value }.map { $0.key }
+                        )
+                    ) {
                         Text("検索する")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                 }
             }
+        }
             .navigationTitle("検索")
             .background(Color(red: 0.9, green: 0.88, blue: 0.98))
         }
     }
-}
 
 #Preview {
-    SearchView()
-        .environmentObject(CafeViewModel())
+    SearchResultsView(
+        selectedAnimals: ["ネコ"],
+        selectedPrefecture: "大阪府",
+        selectedPrice: "1000-2000円",
+        selectedTags: ["12歳以下OK"]
+    )
+    .environmentObject(CafeViewModel())
 }
