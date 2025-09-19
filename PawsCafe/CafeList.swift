@@ -95,10 +95,10 @@ class CafeViewModel: ObservableObject {
     func loadSampleData() {
         // allCafesのデータ (これは修正済み)
         self.allCafes = [
-            Cafe(id: UUID(), name: "にゃんにゃんカフェ", animals:["ネコ"], address:"大阪府", call:"080-XXXX-XXXX", price:"1000-2000円", url: URL(string: "https://umeda.example.com")!, imageName: "cafe1", latitude: 34.7025, longitude: 135.4959, tags: ["12歳以下OK","女性のみ"]),
-            Cafe(id: UUID(), name: "わんわんカフェ", animals:["イヌ"], address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://shinsaibashi.example.com")!, imageName: "cafe2", latitude: 34.6723, longitude: 135.5033, tags: []),
-            Cafe(id: UUID(), name: "ぴよぴよカフェ", animals:["鳥類"], address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://tennoji.example.com")!, imageName: "cafe3", latitude: 34.6469, longitude: 135.5132, tags: []),
-            Cafe(id: UUID(), name: "ぶーぶーカフェ", animals:["ブタ"], address:"大阪府", call:"080-XXXX-XXXX", price:"2000-3000円", url: URL(string: "https://horie.example.com")!, imageName: "cafe4", latitude: 34.6749, longitude: 135.4949, tags: [])
+            Cafe(id: UUID(), name: "にゃんにゃんカフェ", animals:["ネコ"], address:"大阪府", call:"080-XXXX-XXXX", price:"1001円〜2000円", url: URL(string: "https://umeda.example.com")!, imageName: "cafe1", latitude: 34.7025, longitude: 135.4959, tags: ["12歳以下OK","女性のみ"]),
+            Cafe(id: UUID(), name: "わんわんカフェ", animals:["イヌ"], address:"大阪府", call:"080-XXXX-XXXX", price:"2001円〜3000円", url: URL(string: "https://shinsaibashi.example.com")!, imageName: "cafe2", latitude: 34.6723, longitude: 135.5033, tags: []),
+            Cafe(id: UUID(), name: "ぴよぴよカフェ", animals:["鳥類"], address:"大阪府", call:"080-XXXX-XXXX", price:"2001円〜3000円", url: URL(string: "https://tennoji.example.com")!, imageName: "cafe3", latitude: 34.6469, longitude: 135.5132, tags: []),
+            Cafe(id: UUID(), name: "ぶーぶーカフェ", animals:["ブタ"], address:"大阪府", call:"080-XXXX-XXXX", price:"2001円〜3000円", url: URL(string: "https://horie.example.com")!, imageName: "cafe4", latitude: 34.6749, longitude: 135.4949, tags: [])
         ]
         
         // ↓ HomeViewから他のサンプルデータもここに移動する

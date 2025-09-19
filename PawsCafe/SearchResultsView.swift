@@ -79,7 +79,7 @@ struct SearchResultsView: View {
                 }
             }
         }
-        .navigationTitle("検索結果")
+//        .navigationTitle("検索結果")
     }
 }
 
