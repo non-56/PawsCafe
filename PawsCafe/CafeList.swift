@@ -108,17 +108,20 @@ class CafeViewModel: ObservableObject {
             CafePlan(id: UUID(), date: "2025年9月20日", name: "ぴよぴよカフェ"),
             CafePlan(id: UUID(), date: "2025年9月25日", name: "ぶーぶーカフェ")
         ]
-        
-        self.favoriteCafes = [
-                    self.allCafes[0],
-                    self.allCafes[1]
-                ]
 
-                // ▼▼▼ おすすめのサンプルデータを「allCafes」から選ぶ形に変更 ▼▼▼
-                // 例えば、3番目と4番目をおすすめとします。
-                self.recommendCafes = [
-                    self.allCafes[2],
-                    self.allCafes[3]
-                ]
+        self.recommendCafes = Array(self.allCafes.shuffled().prefix(2))
+    }
+}
+extension CafeViewModel {
+    func toggleFavorite(cafe: Cafe) {
+        if let index = favoriteCafes.firstIndex(of: cafe) {
+            favoriteCafes.remove(at: index)
+        } else {
+            favoriteCafes.append(cafe)
+        }
+    }
+    
+    func isFavorite(cafe: Cafe) -> Bool {
+        favoriteCafes.contains(cafe)
     }
 }

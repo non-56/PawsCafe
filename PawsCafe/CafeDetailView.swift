@@ -62,7 +62,8 @@ struct CafeDetailView: View {
             }
             .padding()
         }
-        .background(Color(red: 0.9, green: 0.88, blue: 0.98).ignoresSafeArea())
+//        .background(Color(red: 0.9, green: 0.88, blue: 0.98)
+//            .ignoresSafeArea())
         .navigationTitle(cafe.name)
         .navigationBarTitleDisplayMode(.inline)
     }
