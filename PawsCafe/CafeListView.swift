@@ -1,9 +1,3 @@
-//
-//  CafeListView.swift
-//  PawsCafe
-//
-//  Created by Kanno Taichi on 2025/09/03.
-//
 
 import SwiftUI
 
