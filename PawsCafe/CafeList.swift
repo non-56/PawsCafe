@@ -94,12 +94,7 @@ class CafeViewModel: ObservableObject {
         ]
         
         // 予定
-        self.cafePlans = [
-            CafePlan(id: UUID(), date: formatter.date(from: "2025年9月13日")!, name: "にゃんにゃんカフェ", memo: "猫たちとリラックス"),
-            CafePlan(id: UUID(), date: formatter.date(from: "2025年9月15日")!, name: "わんわんカフェ", memo: "新しい犬カフェを試す"),
-            CafePlan(id: UUID(), date: formatter.date(from: "2025年9月20日")!, name: "ぴよぴよカフェ", memo: nil),
-            CafePlan(id: UUID(), date: formatter.date(from: "2025年9月25日")!, name: "ぶーぶーカフェ", memo: "友達と一緒に")
-        ]
+        self.cafePlans = []
 
         self.recommendCafes = Array(self.allCafes.shuffled().prefix(2))
     }

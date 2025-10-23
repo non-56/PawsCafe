@@ -1,22 +1,29 @@
-
 import SwiftUI
 import MapKit
-// MARK: - 新規予定追加画面
 
 struct AddCafePlanView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var cafeViewModel: CafeViewModel
     
     @State private var selectedDate = Date()
     @State private var selectedTime = Date()
     @State private var planName = ""
     @State private var memo = ""
     
+    private let japaneseLocale = Locale(identifier: "ja_JP")
+    
     var body: some View {
         Form {
             Section(header: Text("日付と時間")) {
                 DatePicker("日付", selection: $selectedDate, displayedComponents: .date)
+                    .datePickerStyle(.compact)
+                    .environment(\.locale, japaneseLocale)
+                
+                Text(formattedDate(selectedDate))
+                    .font(.headline)
+                    .padding(.vertical, 4)
+                
                 DatePicker("時間", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                    .environment(\.locale, japaneseLocale)
             }
             
             Section(header: Text("予定内容")) {
@@ -26,7 +33,7 @@ struct AddCafePlanView: View {
             }
             
             Button(action: savePlan) {
-                Label("予定を追加", systemImage: "plus.circle.fill")
+                Text("予定を追加")
                     .font(.headline)
                     .frame(maxWidth: .infinity)
             }
@@ -35,6 +42,7 @@ struct AddCafePlanView: View {
         .navigationTitle("新しい予定")
     }
     
+    // MARK: - 保存処理
     private func savePlan() {
         guard !planName.isEmpty else { return }
         let calendar = Calendar.current
@@ -46,7 +54,40 @@ struct AddCafePlanView: View {
         ) ?? selectedDate
         
         let newPlan = CafePlan(id: UUID(), date: combinedDate, name: planName, memo: memo)
-        cafeViewModel.cafePlans.append(newPlan)
+        
+        // 1. UserDefaultsから既存予定を読み込み
+        var plans: [CafePlan] = []
+        if let data = UserDefaults.standard.data(forKey: "SavedCafePlans"),
+           let decoded = try? JSONDecoder().decode([CafePlan].self, from: data) {
+            plans = decoded
+        }
+        
+        // 2. 新しい予定を追加
+        plans.append(newPlan)
+        
+        // 3. UserDefaultsに保存
+        if let encoded = try? JSONEncoder().encode(plans) {
+            UserDefaults.standard.set(encoded, forKey: "SavedCafePlans")
+        }
+        
         dismiss()
+    }
+
+    
+    // MARK: - 読み込み処理
+    private func loadPlans() -> [CafePlan] {
+        if let data = UserDefaults.standard.data(forKey: "SavedCafePlans"),
+           let decoded = try? JSONDecoder().decode([CafePlan].self, from: data) {
+            return decoded
+        }
+        return []
+    }
+    
+    // MARK: - 日本語フォーマット
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = japaneseLocale
+        formatter.dateFormat = "M月d日(E)"
+        return formatter.string(from: date)
     }
 }

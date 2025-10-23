@@ -1,10 +1,3 @@
-//
-//  ProfileView.swift
-//  PawsCafe
-//
-//  Created by Kanno Taichi on 2025/09/03.
-//
-
 import SwiftUI
 
 struct ProfileView: View {
@@ -64,7 +57,7 @@ struct ProfileView: View {
         UserDefaults.standard.set(gender, forKey: "gender")
         UserDefaults.standard.set(region, forKey: "region")
         
-        print("✅ プロフィール保存:")
+        print("プロフィール保存:")
         print("氏名: \(fullName)")
         print("ニックネーム: \(nickname)")
         print("メール: \(email)")

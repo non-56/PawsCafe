@@ -61,35 +61,45 @@ struct HomeView: View {
                 }
                 .padding()
             }
-            .background(Color(red: 0.9, green: 0.88, blue: 0.98))
+            .background(Color(red: 1.0, green: 0.895, blue: 0.936))
             .navigationTitle("カフェまとめ")
         }
     }
 }
 
 struct PlanSection: View {
-    @EnvironmentObject var cafeViewModel: CafeViewModel
+    @State private var cafePlans: [CafePlan] = [] // ← UserDefaultsから読み込む用
     
     // 今日以降の予定だけを表示
     var upcomingPlans: [CafePlan] {
         let today = Calendar.current.startOfDay(for: Date())
-        return cafeViewModel.cafePlans
+        return cafePlans
             .filter { $0.date >= today }
             .sorted { $0.date < $1.date }
     }
+    
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ja_JP")
+        formatter.dateFormat = "M月d日(E)"
+        return formatter
+    }()
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text("今後の予定")
                     .font(.title2).bold()
                 Spacer()
+                
                 NavigationLink(destination: AddCafePlanView()) {
                     Image(systemName: "plus.circle.fill")
                         .foregroundColor(.blue)
                         .font(.title2)
                 }
+                
                 NavigationLink("全て見る") {
-                    FullScheduleView(plans: cafeViewModel.cafePlans)
+                    FullScheduleView()
                 }
             }
 
@@ -101,7 +111,8 @@ struct PlanSection: View {
             } else {
                 ForEach(plans) { plan in
                     HStack {
-                        Text(plan.date.formatted(date: .abbreviated, time: .omitted))
+                        Text(dateFormatter.string(from: plan.date))
+                            .bold()
                         Spacer()
                         Text(plan.name)
                             .foregroundColor(.gray)
@@ -109,6 +120,21 @@ struct PlanSection: View {
                     .padding(.vertical, 4)
                 }
             }
+        }
+        .onAppear {
+            loadPlans()
+        }
+    }
+    
+    // MARK: - UserDefaultsから読み込み
+    private func loadPlans() {
+        if let data = UserDefaults.standard.data(forKey: "SavedCafePlans"),
+           let decoded = try? JSONDecoder().decode([CafePlan].self, from: data) {
+            self.cafePlans = decoded
+            print("PlanSectionで予定を読み込みました (\(decoded.count)件)")
+        } else {
+            self.cafePlans = []
+            print("予定データが見つかりません")
         }
     }
 }
@@ -183,7 +209,7 @@ struct CafeSection: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.green)
+                    .background(Color.pink)
                     .cornerRadius(12)
             }
         }
