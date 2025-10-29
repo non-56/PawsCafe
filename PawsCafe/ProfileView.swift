@@ -10,45 +10,93 @@ struct ProfileView: View {
     
     let genders = ["", "男性", "女性", "その他"]
     let prefectures = [
-        "", "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県", "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県", "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県", "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県", "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県", "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県", "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
+        "", "北海道", "青森県", "岩手県", "宮城県", "秋田県", "山形県", "福島県",
+        "茨城県", "栃木県", "群馬県", "埼玉県", "千葉県", "東京都", "神奈川県",
+        "新潟県", "富山県", "石川県", "福井県", "山梨県", "長野県", "岐阜県",
+        "静岡県", "愛知県", "三重県", "滋賀県", "京都府", "大阪府", "兵庫県",
+        "奈良県", "和歌山県", "鳥取県", "島根県", "岡山県", "広島県", "山口県",
+        "徳島県", "香川県", "愛媛県", "高知県", "福岡県", "佐賀県", "長崎県",
+        "熊本県", "大分県", "宮崎県", "鹿児島県", "沖縄県"
     ]
+    
+    init() {
+        UITableView.appearance().backgroundColor = .clear // iOS 15対応
+    }
     
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("ユーザー情報")) {
-                    TextField("氏名", text: $fullName)
-                    TextField("ニックネーム", text: $nickname)
-                    TextField("メールアドレス", text: $email)
-                        .keyboardType(.emailAddress)
-                    
-                    Stepper(value: $age, in: 0...120) {
-                        Text("年齢: \(age)歳")
-                    }
-                    
-                    Picker("性別", selection: $gender) {
-                        ForEach(genders, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
-                    }
-                    
-                    Picker("地域（都道府県）", selection: $region) {
-                        ForEach(prefectures, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
-                    }
-                }
+            ZStack {
+                Color(red: 1.0, green: 0.895, blue: 0.936)
+                    .ignoresSafeArea()
                 
-                Section {
-                    Button("保存") {
-                        saveProfile()
+                ScrollView {
+                    VStack(spacing: 20) {
+                        
+                        // ユーザー情報カード
+                        sectionCard(title: "ユーザー情報") {
+                            VStack(spacing: 12) {
+                                TextField("氏名", text: $fullName)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                TextField("ニックネーム", text: $nickname)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                TextField("メールアドレス", text: $email)
+                                    .keyboardType(.emailAddress)
+                                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                                
+                                Stepper(value: $age, in: 0...120) {
+                                    Text("年齢: \(age)歳")
+                                }
+                                
+                                // 性別
+                                HStack {
+                                    Text("性別")
+                                        .font(.body)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Picker("", selection: $gender) {
+                                        ForEach(genders, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
+                                    }
+                                    .pickerStyle(MenuPickerStyle())
+                                    .frame(width: 150, alignment: .trailing)
+                                }
+                                
+                                // 都道府県
+                                HStack {
+                                    Text("都道府県")
+                                        .font(.body)
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                    Picker("", selection: $region) {
+                                        ForEach(prefectures, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
+                                    }
+                                    .pickerStyle(MenuPickerStyle())
+                                    .frame(width: 150, alignment: .trailing)
+                                }
+                            }
+                        }
+                        
+                        // 保存ボタンカード
+                        sectionCard {
+                            Button(action: saveProfile) {
+                                Text("保存")
+                                    .font(.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color(red: 0.85, green: 0.6, blue: 0.85))
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        }
                     }
+                    .padding()
                 }
             }
-            .background(Color(red: 0.9, green: 0.88, blue: 0.98))
             .navigationTitle("プロフィール")
-            .onAppear {
-                loadProfile()
-            }
+            .onAppear { loadProfile() }
         }
     }
-    // MARK: - UserDefaults保存処理
+    
+    // MARK: - 保存
     func saveProfile() {
         UserDefaults.standard.set(fullName, forKey: "fullName")
         UserDefaults.standard.set(nickname, forKey: "nickname")
@@ -66,7 +114,7 @@ struct ProfileView: View {
         print("地域: \(region)")
     }
     
-    // MARK: - UserDefaults読み込み処理
+    // MARK: - 読み込み
     func loadProfile() {
         fullName = UserDefaults.standard.string(forKey: "fullName") ?? ""
         nickname = UserDefaults.standard.string(forKey: "nickname") ?? ""
@@ -77,6 +125,24 @@ struct ProfileView: View {
     }
 }
 
+// 共通カードデザイン
+@ViewBuilder
+private func sectionCard<Content: View>(title: String? = nil, @ViewBuilder content: () -> Content) -> some View {
+    VStack(alignment: .leading, spacing: 12) {
+        if let title = title {
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.gray)
+        }
+        content()
+    }
+    .padding()
+    .background(
+        RoundedRectangle(cornerRadius: 16)
+            .fill(Color.white.opacity(0.65))
+    )
+    .cornerRadius(16)
+}
 
 #Preview {
     ProfileView()

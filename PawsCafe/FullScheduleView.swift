@@ -21,6 +21,7 @@ struct FullScheduleView: View {
             }
             .onDelete(perform: deletePlan)
         }
+        .background(Color(red: 1.0, green: 0.895, blue: 0.936))
         .navigationTitle("全ての予定")
         .onAppear {
             loadPlans()
