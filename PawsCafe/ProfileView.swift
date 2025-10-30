@@ -20,7 +20,7 @@ struct ProfileView: View {
     ]
     
     init() {
-        UITableView.appearance().backgroundColor = .clear // iOS 15対応
+        UITableView.appearance().backgroundColor = .clear
     }
     
     var body: some View {

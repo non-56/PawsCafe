@@ -1,20 +1,19 @@
-
 import SwiftUI
 
 //MARK: - 一覧
 struct SelectFavoriteView: View {
     var allCafes: [Cafe] = [
-          Cafe(id: UUID(), // id を追加
+          Cafe(id: UUID(),
                name: "サンプル",
                animals:["cat"],
-               address:"大阪府", // address に修正
+               address:"大阪府",
                call:"080-XXXX-XXXX",
                price:"2000-3000円",
                url: URL(string: "https://shinsaibashi.example.com")!,
                imageName: "sample",
-               latitude: 34.6723, // latitude を追加
-               longitude: 135.5033, // longitude を追加
-               tags: []) // longitude を追加
+               latitude: 34.6723,
+               longitude: 135.5033,
+               tags: []) 
       ]
     @Binding var favoriteCafes: [Cafe]
     @Environment(\.presentationMode) var presentationMode
