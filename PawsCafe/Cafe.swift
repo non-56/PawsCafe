@@ -1,3 +1,4 @@
+import Foundation
 // MARK: - カフェモデル
 
 struct Cafe: Identifiable, Equatable, Codable {
