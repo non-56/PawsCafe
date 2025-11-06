@@ -68,7 +68,7 @@ struct HomeView: View {
 }
 
 struct PlanSection: View {
-    @State private var cafePlans: [CafePlan] = [] // ← UserDefaultsから読み込む用
+    @State private var cafePlans: [CafePlan] = [] 
     
     // 今日以降の予定だけを表示
     var upcomingPlans: [CafePlan] {

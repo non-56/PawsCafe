@@ -97,7 +97,7 @@ struct SearchView: View {
                                     
                                     Spacer()
                                     
-                                    Picker("", selection: $selectedPrice) { 
+                                    Picker("", selection: $selectedPrice) {
                                         Text("指定なし").tag("")
                                         ForEach(priceOptions, id: \.self) { price in
                                             Text(price).tag(price)
@@ -152,6 +152,7 @@ struct SearchView: View {
                     .padding()
                 }
             }
+            .background(Color(red: 1.0, green: 0.895, blue: 0.936).ignoresSafeArea())
             .navigationTitle("検索")
         }
     }
