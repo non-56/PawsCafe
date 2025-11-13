@@ -1,7 +1,7 @@
 import Foundation
 // MARK: - カフェモデル
 
-struct Cafe: Identifiable, Equatable, Codable {
+struct Cafe: Identifiable, Equatable, Codable, Hashable {
     let id: UUID
     let name: String
     let animals: [String]
