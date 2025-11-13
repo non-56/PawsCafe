@@ -25,14 +25,15 @@ struct ProfileView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                Color(red: 1.0, green: 0.895, blue: 0.936)
-                    .ignoresSafeArea()
-                
-                ScrollView {
+            ScrollView {
+                ZStack {
+                    // 背景
+                    Color(red: 1.0, green: 0.895, blue: 0.936)
+                        .ignoresSafeArea()
+                    
                     VStack(spacing: 20) {
                         
-                        // ユーザー情報カード
+                        // MARK: - ユーザー情報
                         sectionCard(title: "ユーザー情報") {
                             VStack(spacing: 12) {
                                 TextField("氏名", text: $fullName)
@@ -47,27 +48,31 @@ struct ProfileView: View {
                                     Text("年齢: \(age)歳")
                                 }
                                 
-                                // 性別
+                                // MARK: - 性別
                                 HStack {
                                     Text("性別")
                                         .font(.body)
                                         .foregroundColor(.primary)
                                     Spacer()
                                     Picker("", selection: $gender) {
-                                        ForEach(genders, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
+                                        ForEach(genders, id: \.self) {
+                                            Text($0.isEmpty ? "指定なし" : $0)
+                                        }
                                     }
                                     .pickerStyle(MenuPickerStyle())
                                     .frame(width: 150, alignment: .trailing)
                                 }
                                 
-                                // 都道府県
+                                // MARK: - 都道府県
                                 HStack {
                                     Text("都道府県")
                                         .font(.body)
                                         .foregroundColor(.primary)
                                     Spacer()
                                     Picker("", selection: $region) {
-                                        ForEach(prefectures, id: \.self) { Text($0.isEmpty ? "指定なし" : $0) }
+                                        ForEach(prefectures, id: \.self) {
+                                            Text($0.isEmpty ? "指定なし" : $0)
+                                        }
                                     }
                                     .pickerStyle(MenuPickerStyle())
                                     .frame(width: 150, alignment: .trailing)
@@ -75,7 +80,7 @@ struct ProfileView: View {
                             }
                         }
                         
-                        // 保存ボタンカード
+                        // MARK: - 保存ボタン
                         sectionCard {
                             Button(action: saveProfile) {
                                 Text("保存")
@@ -91,12 +96,15 @@ struct ProfileView: View {
                     .padding()
                 }
             }
+            .background(Color(red: 1.0, green: 0.895, blue: 0.936))
             .navigationTitle("プロフィール")
+            .toolbarBackground(Color(red: 1.0, green: 0.895, blue: 0.936), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .onAppear { loadProfile() }
         }
     }
     
-    // MARK: - 保存
+    // MARK: - 保存処理
     func saveProfile() {
         UserDefaults.standard.set(fullName, forKey: "fullName")
         UserDefaults.standard.set(nickname, forKey: "nickname")
@@ -104,17 +112,9 @@ struct ProfileView: View {
         UserDefaults.standard.set(age, forKey: "age")
         UserDefaults.standard.set(gender, forKey: "gender")
         UserDefaults.standard.set(region, forKey: "region")
-        
-        print("プロフィール保存:")
-        print("氏名: \(fullName)")
-        print("ニックネーム: \(nickname)")
-        print("メール: \(email)")
-        print("年齢: \(age)")
-        print("性別: \(gender)")
-        print("地域: \(region)")
     }
     
-    // MARK: - 読み込み
+    // MARK: - 読み込み処理
     func loadProfile() {
         fullName = UserDefaults.standard.string(forKey: "fullName") ?? ""
         nickname = UserDefaults.standard.string(forKey: "nickname") ?? ""
@@ -125,7 +125,7 @@ struct ProfileView: View {
     }
 }
 
-// 共通カードデザイン
+// MARK: - 共通カードデザイン
 @ViewBuilder
 private func sectionCard<Content: View>(title: String? = nil, @ViewBuilder content: () -> Content) -> some View {
     VStack(alignment: .leading, spacing: 12) {

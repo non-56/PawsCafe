@@ -5,80 +5,77 @@ struct HomeView: View {
     @EnvironmentObject var cafeViewModel: CafeViewModel
     @StateObject private var locationManager = LocationManager()
     
-    // 今日以降の予定だけを表示
-    var upcomingPlans: [CafePlan] {
-        let today = Calendar.current.startOfDay(for: Date())
-        return cafeViewModel.cafePlans
-            .filter { $0.date >= today }
-            .sorted { $0.date < $1.date }
-    }
-    
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    
-                    // MARK: 今後の予定
-                    PlanSection()
-                    
-                    // MARK: お気に入り
-                    FavoriteSection()
-                    
-                    // MARK: おすすめ
-                    RecomendSection()
-                    
-                    // MARK: カフェ一覧
-                    CafeSection()
-                    
-                    // MARK: 地図
-                    VStack(alignment: .leading) {
-                        Text("近辺のカフェマップ")
-                            .font(.title2)
-                            .bold()
+            ZStack {
+                // 背景色を全体に適用
+                Color(red: 1.0, green: 0.895, blue: 0.936)
+                    .ignoresSafeArea()
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 24) {
                         
-                        NavigationLink(destination: FullMapView()) {
-                            Map(position: .constant(.region(locationManager.region))) {
-                                // 現在地マーカー
-                                if let userLocation = locationManager.userLocation {
-                                    Annotation("現在地", coordinate: userLocation) {
-                                        ZStack {
-                                            Circle()
-                                                .fill(Color.blue.opacity(0.3))
-                                                .frame(width: 32, height: 32)
-                                            Circle()
-                                                .fill(Color.blue)
-                                                .frame(width: 16, height: 16)
+                        // MARK: 今後の予定
+                        PlanSection()
+                        
+                        // MARK: お気に入り
+                        FavoriteSection()
+                        
+                        // MARK: おすすめ
+                        RecomendSection()
+                        
+                        // MARK: カフェ一覧
+                        CafeSection()
+                        
+                        // MARK: 地図
+                        VStack(alignment: .leading) {
+                            Text("近辺のカフェマップ")
+                                .font(.title2)
+                                .bold()
+                            
+                            NavigationLink(destination: FullMapView()) {
+                                Map(position: .constant(.region(locationManager.region))) {
+                                    if let userLocation = locationManager.userLocation {
+                                        Annotation("現在地", coordinate: userLocation) {
+                                            ZStack {
+                                                Circle()
+                                                    .fill(Color.blue.opacity(0.3))
+                                                    .frame(width: 32, height: 32)
+                                                Circle()
+                                                    .fill(Color.blue)
+                                                    .frame(width: 16, height: 16)
+                                            }
                                         }
                                     }
+                                    
+                                    ForEach(cafeViewModel.allCafes) { cafe in
+                                        Marker(cafe.name, coordinate: CLLocationCoordinate2D(latitude: cafe.latitude, longitude: cafe.longitude))
+                                            .tint(.orange)
+                                    }
                                 }
-
-                                // カフェマーカー（クラスター化自動対応）
-                                ForEach(cafeViewModel.allCafes) { cafe in
-                                    Marker(cafe.name, coordinate: CLLocationCoordinate2D(latitude: cafe.latitude, longitude: cafe.longitude))
-                                        .tint(.orange)
-                                }
+                                .mapStyle(.standard)
+                                .frame(height: 200)
+                                .cornerRadius(10)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                )
                             }
-                            .mapStyle(.standard)
-                            .frame(height: 200)
-                            .cornerRadius(10)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                            )
                         }
                     }
-                    
+                    .padding()
                 }
-                .padding()
             }
-            .background(Color(red: 1.0, green: 0.895, blue: 0.936))
             .navigationTitle("カフェまとめ")
+            .toolbarBackground(Color(red: 1.0, green: 0.895, blue: 0.936), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
         .onAppear {
             locationManager.requestLocation()
         }
     }
 }
+
 
 // MARK: - PlanSection
 struct PlanSection: View {

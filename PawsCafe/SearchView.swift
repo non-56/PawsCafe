@@ -31,129 +31,129 @@ struct SearchView: View {
     
     var body: some View {
         NavigationView {
-            ZStack {
-                Color(red: 1.0, green: 0.895, blue: 0.936)
-                    .ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        
-                        // MARK: - アニマル
-                        sectionCard(title: "アニマル") {
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 12) {
-                                ForEach(animalOptions, id: \.self) { animal in
-                                    Button(action: {
-                                        if selectedAnimals.contains(animal) {
-                                            selectedAnimals.remove(animal)
-                                        } else {
-                                            selectedAnimals.insert(animal)
-                                        }
-                                    }) {
-                                        Text(animal)
-                                            .font(.subheadline)
-                                            .frame(maxWidth: .infinity, minHeight: 36)
-                                            .padding(.vertical, 8)
-                                            .background(selectedAnimals.contains(animal) ? Color.pink : Color.gray.opacity(0.3))
-                                            .foregroundColor(.white)
-                                            .cornerRadius(8)
+            ScrollView {
+                VStack(spacing: 20) {
+                    
+                    // MARK: - アニマル
+                    sectionCard(title: "アニマル") {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 12) {
+                            ForEach(animalOptions, id: \.self) { animal in
+                                Button(action: {
+                                    if selectedAnimals.contains(animal) {
+                                        selectedAnimals.remove(animal)
+                                    } else {
+                                        selectedAnimals.insert(animal)
                                     }
-                                    .buttonStyle(PlainButtonStyle())
+                                }) {
+                                    Text(animal)
+                                        .font(.subheadline)
+                                        .frame(maxWidth: .infinity, minHeight: 36)
+                                        .padding(.vertical, 8)
+                                        .background(selectedAnimals.contains(animal) ? Color.pink : Color.gray.opacity(0.3))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(8)
                                 }
-                            }
-                        }
-                        
-                        // MARK: - 場所
-                        sectionCard(title: "場所") {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    Text("都道府県を指定")
-                                        .font(.body)
-                                        .foregroundColor(.primary)
-                                    
-                                    Spacer()
-                                    
-                                    Picker("", selection: $selectedPrefecture) {
-                                        Text("指定なし").tag("")
-                                        ForEach(prefectures, id: \.self) { prefecture in
-                                            Text(prefecture).tag(prefecture)
-                                        }
-                                    }
-                                    .pickerStyle(MenuPickerStyle())
-                                    .frame(width: 150, alignment: .trailing)
-                                }
-                                .padding(.horizontal)
-                                
-                                Toggle("近くから探す", isOn: $useCurrentLocation)
-                                    .padding(.horizontal)
-                            }
-                        }
-                        // MARK: - 価格
-                        sectionCard(title: "価格") {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    Text("価格帯を選択")
-                                        .font(.body)
-                                        .foregroundColor(.primary)
-                                    
-                                    Spacer()
-                                    
-                                    Picker("", selection: $selectedPrice) {
-                                        Text("指定なし").tag("")
-                                        ForEach(priceOptions, id: \.self) { price in
-                                            Text(price).tag(price)
-                                        }
-                                    }
-                                    .pickerStyle(MenuPickerStyle())
-                                    .frame(width: 150, alignment: .trailing)
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                        // MARK: - 細かい条件
-                        sectionCard(title: "細かい条件") {
-                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 12) {
-                                ForEach(fineConditions.keys.sorted(), id: \.self) { key in
-                                    Button(action: {
-                                        fineConditions[key]?.toggle()
-                                    }) {
-                                        Text(key)
-                                            .font(.footnote)
-                                            .frame(maxWidth: .infinity, minHeight: 36)
-                                            .padding(.vertical, 8)
-                                            .background((fineConditions[key] ?? false) ? Color.pink : Color.gray.opacity(0.3))
-                                            .foregroundColor(.white)
-                                            .cornerRadius(8)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                }
-                            }
-                        }
-                        
-                        // MARK: - 検索ボタン
-                        sectionCard {
-                            NavigationLink(
-                                destination: SearchResultsView(
-                                    selectedAnimals: selectedAnimals,
-                                    selectedPrefecture: selectedPrefecture,
-                                    selectedPrice: selectedPrice,
-                                    selectedTags: fineConditions.filter { $0.value }.map { $0.key }
-                                )
-                            ) {
-                                Text("検索する")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color(red: 0.85, green: 0.6, blue: 0.85))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
+                                .buttonStyle(PlainButtonStyle())
                             }
                         }
                     }
-                    .padding()
+                    
+                    // MARK: - 場所
+                    sectionCard(title: "場所") {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("都道府県を指定")
+                                    .font(.body)
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Picker("", selection: $selectedPrefecture) {
+                                    Text("指定なし").tag("")
+                                    ForEach(prefectures, id: \.self) { prefecture in
+                                        Text(prefecture).tag(prefecture)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .frame(width: 150, alignment: .trailing)
+                            }
+                            .padding(.horizontal)
+                            
+                            Toggle("近くから探す", isOn: $useCurrentLocation)
+                                .padding(.horizontal)
+                        }
+                    }
+                    
+                    // MARK: - 価格
+                    sectionCard(title: "価格") {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Text("価格帯を選択")
+                                    .font(.body)
+                                    .foregroundColor(.primary)
+                                
+                                Spacer()
+                                
+                                Picker("", selection: $selectedPrice) {
+                                    Text("指定なし").tag("")
+                                    ForEach(priceOptions, id: \.self) { price in
+                                        Text(price).tag(price)
+                                    }
+                                }
+                                .pickerStyle(MenuPickerStyle())
+                                .frame(width: 150, alignment: .trailing)
+                            }
+                            .padding(.horizontal)
+                        }
+                    }
+                    
+                    // MARK: - 細かい条件
+                    sectionCard(title: "細かい条件") {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))], spacing: 12) {
+                            ForEach(fineConditions.keys.sorted(), id: \.self) { key in
+                                Button(action: {
+                                    fineConditions[key]?.toggle()
+                                }) {
+                                    Text(key)
+                                        .font(.footnote)
+                                        .frame(maxWidth: .infinity, minHeight: 36)
+                                        .padding(.vertical, 8)
+                                        .background((fineConditions[key] ?? false) ? Color.pink : Color.gray.opacity(0.3))
+                                        .foregroundColor(.white)
+                                        .cornerRadius(8)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                        }
+                    }
+                    
+                    // MARK: - 検索ボタン
+                    sectionCard {
+                        NavigationLink(
+                            destination: SearchResultsView(
+                                selectedAnimals: selectedAnimals,
+                                selectedPrefecture: selectedPrefecture,
+                                selectedPrice: selectedPrice,
+                                selectedTags: fineConditions.filter { $0.value }.map { $0.key }
+                            )
+                        ) {
+                            Text("検索する")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color(red: 0.85, green: 0.6, blue: 0.85))
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                    }
                 }
+                .padding()
             }
-            .background(Color(red: 1.0, green: 0.895, blue: 0.936).ignoresSafeArea())
+            .background(Color(red: 1.0, green: 0.895, blue: 0.936))
             .navigationTitle("検索")
+            // ✅ ここがポイント！
+            .toolbarBackground(Color(red: 1.0, green: 0.895, blue: 0.936), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
     }
 }
@@ -170,12 +170,13 @@ private func sectionCard<Content: View>(title: String? = nil, @ViewBuilder conte
         content()
     }
     .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color.white.opacity(0.65))
-        )
-        .cornerRadius(16)
+    .background(
+        RoundedRectangle(cornerRadius: 16)
+            .fill(Color.white.opacity(0.65))
+    )
+    .cornerRadius(16)
 }
+
 #Preview {
     SearchView()
         .environmentObject(CafeViewModel())
