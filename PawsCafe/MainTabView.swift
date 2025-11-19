@@ -22,5 +22,5 @@ struct MainTabView: View {
 }
 #Preview {
     MainTabView()
-        .environmentObject(CafeViewModel()) // ← この一行を追加
+        .environmentObject(CafeViewModel())
 }

@@ -151,7 +151,6 @@ struct SearchView: View {
             }
             .background(Color(red: 1.0, green: 0.895, blue: 0.936))
             .navigationTitle("検索")
-            // ✅ ここがポイント！
             .toolbarBackground(Color(red: 1.0, green: 0.895, blue: 0.936), for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
         }

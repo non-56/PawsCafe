@@ -25,9 +25,9 @@ class CafeDataManager {
         do {
             let data = try encoder.encode(cafes)
             userDefaults.set(data, forKey: cafeListKey)
-            print("✅ カフェリストの保存に成功しました。")
+            print("カフェリストの保存に成功しました。")
         } catch {
-            print("❌ カフェリストの保存に失敗しました: \(error)")
+            print("カフェリストの保存に失敗しました: \(error)")
         }
     }
 
@@ -36,10 +36,10 @@ class CafeDataManager {
         if let data = userDefaults.data(forKey: cafeListKey) {
             do {
                 let cafes = try decoder.decode([Cafe].self, from: data)
-                print("✅ カフェリストの読み込みに成功しました。")
+                print("カフェリストの読み込みに成功しました。")
                 return cafes
             } catch {
-                print("❌ カフェリストの読み込みに失敗しました: \(error)")
+                print("カフェリストの読み込みに失敗しました: \(error)")
             }
         }
         return []

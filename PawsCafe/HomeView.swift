@@ -221,37 +221,19 @@ struct CafeSection: View {
     @EnvironmentObject var cafeViewModel: CafeViewModel
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("カフェ一覧")
-                    .font(.title2)
-                    .bold()
-                
-                Spacer()
-                
-                NavigationLink("全て見る") {
-                    CafeListView(cafes: cafeViewModel.allCafes)
-                }
-            }
-            
-            LazyVGrid(columns: [GridItem(), GridItem()], spacing: 16) {
-                ForEach(cafeViewModel.allCafes.prefix(4)) { cafe in
-                    NavigationLink(destination: CafeDetailView(cafe: cafe)) {
-                        VStack {
-                            RoundedRectangle(cornerRadius: 10)
-                                .fill(Color.white.opacity(0.5))
-                                .frame(height: 100)
-                                .overlay(
-                                    Text(cafe.name)
-                                        .foregroundColor(.black)
-                                        .bold()
-                                )
-                        }
-                        .background(Color.white.opacity(0.3))
-                        .cornerRadius(10)
-                    }
-                }
+        VStack(alignment: .leading, spacing: 12) {
+            NavigationLink {
+                CafeListView(cafes: cafeViewModel.allCafes)
+            } label: {
+                Text("全てのカフェを見る")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.pink)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
             }
         }
+        .padding(.vertical, 8)
     }
 }
